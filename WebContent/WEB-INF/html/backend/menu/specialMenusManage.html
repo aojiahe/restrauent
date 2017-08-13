@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>特色菜维护</title>
+<script type="text/javascript" src="../resources/"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	//获取特色菜信息&菜品类别信息
+	var dataJson = {
+			"type":1,
+			"isSpecial":1	
+		}
+	$.ajax({
+		url:"../menu/goodsManage.action",
+		type:"POST",
+		data:dataJson,
+		dataType:'json',
+		contentType:"application/json;charset=utf-8",
+		success:function(data){
+			if(data.mStatus == 0)
+				alert("success")
+			else
+				alert("error")
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(textStatus);
+			alert(errorThrown);
+		}
+	})
+})
+
+//根据关键字查询菜品信息
+function queryGoods(){
+	var queryMethod = $("#queryMethod").val();
+	var keyWords = $("#keyWords").val();
+	var typeId = $("#goodstype").val();
+	alert("queryMethod:" + queryMethod + " keyWords:" + keyWords)
+	var dataJson = {
+			"queryMethod":queryMethod,
+			"keyWords":keyWords,
+			"type":1,
+			"isSpecial":1,
+			"typeId":0
+		}
+
+	$.ajax({
+		url:"../menu/queryGoods.action",
+		type:"POST",
+		data:dataJson,
+		dataType:'json',
+		contentType:"application/json;charset=utf-8",
+		success:function(data){
+			if(data.mStatus == 0)
+				alert("success")
+			else
+				alert("error")
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(textStatus);
+			alert(errorThrown);
+		}
+	})
+	
+}
+</script>
+</head>
+<body>
+	<h1>特色菜维护</h1>
+	<select id="queryMethod">
+		<option value="0">--请选择--</option>
+		<option value="1">菜品编号</option>
+		<option value="2">菜品名称</option>
+	</select>
+	&nbsp;
+	<select id="goodstype">
+		<option value="1"></option>
+	</select>&nbsp;
+	<input type="text" id="keyWords">&nbsp;
+	<input type="button" value="查询" onclick="queryGoods()">&nbsp;
+	<a href="../menu/reqAddMenu.action?isSpecial=1"><input type="button" value="添加"></a>&nbsp;
+	<input type="button" value="删除">
+	
+	<br>
+	<a href="../menu/reqUpdateMenu.action?goodsid=F0003">修改</a>&nbsp;&nbsp;
+	<a href="#">删除</a>
+</body>
+</html>

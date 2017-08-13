@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>添加菜品</title>
+<script type="text/javascript" src="../resources/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="../resources/jquery.form.js"></script>
+<script type="text/javascript">
+//获取菜品类型信息
+$(document).ready(function(){
+	$.ajax({
+		url:"../menu/goodsTypesManage.action,
+		type:"POST",
+		dataType:'json',
+		data:{'type':1},
+		contentType:'application/json;charset=utf-8',
+		success:function(data){
+			if(data.mStatus == 0)
+				alert("success")
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(textStatus);
+			alert(errorThrown);
+		}
+	})
+})
+
+function addGoodsSub(){
+	 	var $form = $("#addMenuForm")
+    	$form.on("submit",function() {
+        $(this).ajaxSubmit(
+                {
+                    dataType: "json",           //html(默认), xml, script, json...接受服务端返回的类型
+                    resetForm: true,          //成功提交后，重置所有表单元素的值
+                    success: function(data,status,xhr,$form){
+                      if(data.mStatus == 0)
+                          alert(data.mContent)
+                       else
+                    	   alert(data.mError) 
+                    },
+                    error: function(xhr, status, error, $form){
+                        alert(error)
+                }
+        );
+        return false; //阻止表单默认提交
+    });
+	}
+</script>
+
+</head>
+<body>
+	<h1>添加菜品</h1>
+	<form action="../menu/addMenu.action" id="addMenuForm" method="post">
+		菜品名称:<input type="text" name="goodsname">
+		菜品类别:
+		<select name="typeid">
+			<option value="1">test</option>
+		</select>
+		价格：<input type="text" name="goodsprice">
+		折扣：<input type="text" name="goodsdiscount">
+		规格：<input type="text" name="goodsunit">
+		<input type="button" value="添加" onclick="addGoodsSub()">
+	</form>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>登录首页</title>
+
+	<script type="text/javascript" src="../resources/jquery-3.1.1.js"></script>
+	
+	<script type="text/javascript" src="../resources/jquery.json-2.4.js"></script>
+	
+	<!-- <script type="text/javascript" src="../resources/jquery-1.4.4.min.js"></script>  -->
+
+<script type="text/javascript">
+
+	 /* $(document).ready(function(){  */
+		
+		 function loginCheck(){
+		    var empId = document.getElementById("empId");
+			var password = document.getElementById("password");
+			var roleIds = document.getElementsByName("roleId");
+			var roleId = null;
+			
+			for(var i in roleIds){
+					if(roleIds[i].checked == true)
+						roleId = roleIds[i].value				
+
+			}
+			//alert(empId.value + ":" + password.value + ":" + roleId); 
+			//前端验证输入框
+			//...
+
+			 var str={
+				empId:empId.value,
+				password:password.value,
+             	roleId:roleId
+        	 }
+        	 alert(empId.value+" : " + password.value+" : " + roleId)
+        	 var jsonStr=$.toJSON(str);
+		 	 var json=jQuery.parseJSON(jsonStr)
+		 	
+			 var paramJson = 'empId='+empId.value + '&password=' + password.value + '&roleId='+roleId;
+			  $.ajax({
+				url:'/RMS/userLogin/login.action',
+				type:'post',
+				//data:json,
+				data:paramJson,
+				//data:'{"empId":"测试数据","password":"你好"}',
+				//contentType:'application/json;charset=utf-8',
+				contentType: 'application/x-www-form-urlencoded',
+				dataType:'json',
+				//async:true,
+				success:function(mdata){
+					//{"mStatus":0,"mContent":{"empid":"201601001","roleid":4,"empname":"admin","photo":"admin.jpg"}}
+					if(mdata.mStatus == 0){
+						window.location.href = "../userLogin/reqBackendMain.action";
+					}
+					if(mdata.mStatus == 1)
+						alert(mdata.mError)
+					},
+					error : function(XMLHttpRequest, textStatus, errorThrown) {
+						//这个error函数调试时非常有用，如果解析不正确，将会弹出错误框
+						alert(XMLHttpRequest.responseText); 
+						alert(XMLHttpRequest.status);
+						alert(XMLHttpRequest.readyState);
+						alert(textStatus);
+						}
+			});   
+		} 
+</script>
+</head>
+<body>
+	<h1>餐饮服务管理系统</h1>
+	<h2>RestaurantManagementSystem</h2>
+	<!-- <form action="/RMS/userLogin/login.action" method="post"> -->
+		<label>用户名:&nbsp;&nbsp;</label><input type="text" id="empId"/><br>
+		
+		<label>密　码:&nbsp;&nbsp;</label><input type="password" id="password"/><br>
+		
+		<label>登录身份:</label>
+		
+		<input type="radio" value="1" name="roleId" checked="checked"/>前台员工&nbsp;&nbsp;
+		<input type="radio" value="2" name="roleId"/>采购员&nbsp;&nbsp;
+		<input type="radio" value="3" name="roleId"/>部门经理&nbsp;&nbsp;
+		<input type="radio" value="4" name="roleId"/>管理员<br>
+		
+		<!-- <input type="submit" value="登录" onclick="loginCheck()"> -->
+		<button type="submit" onclick="loginCheck()">登录</button>
+	<!-- </form> -->
+</body>
+</html>

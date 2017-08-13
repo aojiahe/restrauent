@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>修改菜品信息</title>
+<script type="text/javascript">
+//获取要修改的菜品信息和菜品类型信息
+$(document).ready(function(){
+	$.ajax({
+		url:"../menu/updateMenu.action,
+		type:"POST",
+		dataType:'json',
+		contentType:'application/json;charset=utf-8',
+		success:function(data){
+			if(data.mStatus == 0)
+				alert("success")
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(textStatus);
+			alert(errorThrown);
+		}
+	})
+})
+	
+</script>
+</head>
+<body>
+	<h1>修改菜品信息</h1>
+	
+</body>
+</html>

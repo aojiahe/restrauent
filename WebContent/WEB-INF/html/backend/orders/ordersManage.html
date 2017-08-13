@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>消费信息管理</title>
+<script type="text/javascript" src="../resources/jquery-3.1.1.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$.ajax({
+			url:'../orders/ordersManage.action',
+			type:'POST',
+			dataType:'json',
+			success:function(data){
+				if(data.mStatus == 0){
+					alert("success")
+					showOrdersInfo(data);
+				}else{
+					alert("获取数据失败")
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				alert(textStatus);
+				alert(errorThrown);
+			}
+		})
+	})
+	
+	//查询消费信息
+	function queryOrders(){
+		var keyWords = $("#keyWords").val();
+		var queryMethod = $("#queryMethod").val();
+		alert("keyWords:" + keyWords + "queryMethod" + queryMethod)
+		var dataJson = {
+				"keyWords":keyWords,
+				"queryMethod":queryMethod
+			}
+		
+		if(queryMethod == 0)
+			alert("Please choose the query method!")
+		else{
+			$.ajax({
+				url:'../orders/queryOrders.action',
+				type:'GET',
+				data:dataJson,
+				contentType:'application/json;charset=utf-8',
+				dataType:'json',
+				success:function(data){
+					if(data.mStatus == 0){
+						alert("success")
+						showOrdersInfo(data);
+					}else{
+						alert(data.mError)
+					}
+				},
+				error : function(XMLHttpRequest, textStatus, errorThrown) {
+					alert(textStatus);
+					alert(errorThrown);
+				}
+			})
+		}
+
+	}
+
+	//显示消费信息
+	function showOrdersInfo(data){
+
+	}
+
+	//批量删除消费记录
+	function deleteSelected(){
+		var ids = $("input[name='orderId']:checked").val();
+		for(var i in ids)
+			alert("id:" + ids[i])
+
+		$.ajax({
+			url:'../orders/deleteOrdersByIds.action?ids=' + ids,
+			type:'POST',
+			data:dataJson,
+			contentType:'application/json;charset=utf-8',
+			dataType:'json',
+			success:function(data){
+				if(data.mStatus == 0){
+					alert("success")
+					showOrdersInfo(data);
+				}else{
+					alert(data.mError)
+				}
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				alert(textStatus);
+				alert(errorThrown);
+			}
+		})
+	}
+
+</script>
+</head>
+<body>
+	<h1>消费信息管理</h1>
+	查询方式：<select id="queryMethod">
+				<option value="0">--请选择--</option>
+				<option value="1">订单编号</option>
+				<option value="2">员工编号</option>
+				<option value="3">餐厅名称</option>
+				<option value="4">订餐时间</option>
+				<option value="5">客户姓名</option>
+			</select>
+	&nbsp;&nbsp;&nbsp;
+	<input type="text" id="keyWords">&nbsp;&nbsp;&nbsp;
+	<input type="button" id="queryBut" value="查询" onclick="queryOrders()">
+	<input type="button" id="deleteBut" value="删除" onclick="deleteSelected()">
+	<br><br>
+	<table border="1">
+		<tr>
+			<th><input type="checkbox" onclick="selectAll()"></th>
+			<th>订单编号</th>
+			<th>员工编号</th>
+			<th>用餐时间</th>
+			<th>姓名</th>
+			<th>身份证号码</th>
+			<th>用餐餐厅</th>
+			<th>总消费金额</th>
+			<th>操作</th>
+		</tr>
+		<tr>
+			<td><input type="checkbox" value="1"></td>
+			<td>
+				<a href="../orders/selectOrderDetailById.action?orderId=1" target="content">详情</a>
+			</td>
+			<td>
+				<a href="../orders/deleteOrdersByIds.action?ids=2" target="content">删除</a>
+			</td>
+		</tr>
+		<tr>
+			<td><input type="checkbox" value="2"></td>
+			<td><a href="#" target="content">详情</a></td>
+			<td><a href="#" target="content">删除</a></td>
+		</tr>
+	</table>
+</body>
+</html>

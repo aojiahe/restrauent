@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cqupt.rms.mapper.GoodsTypeMapper">
+
+	<!-- 查询商品所有的类别信息 -->
+	<select id="queryGoodsTypes" parameterType="String" resultType="com.cqupt.rms.model.basic.Goodstype">
+		select * from goodsType where type = #{type}
+	</select>
+	
+	<!-- 使用关键字通过对商品类型名进行商品类型信息的模糊查询 -->
+	<select id="searchGoodsTypeByName" parameterType="com.cqupt.rms.model.basic.Goodstype"
+		resultType="com.cqupt.rms.model.basic.Goodstype">
+		select * from goodsType where type = #{type} and typeName like '%${typename}%'
+	</select>
+	
+	<!-- 添加商品类别 -->
+	<insert id="insertGoodsType" parameterType="com.cqupt.rms.model.basic.Goodstype">
+		insert into goodsType(typeName,type) values(#{typename},#{type})
+	</insert>
+	
+	<!-- 根据商品类型编号查询商品类型信息 -->
+	<select id="selectGoodsTypeById" parameterType="int" resultType="com.cqupt.rms.model.basic.Goodstype">
+		select * from goodsType where typeId = #{typeId}
+	</select>
+	
+	<!-- 根据商品类型ID修改商品类型 -->
+	<update id="updateGoodsTypeById" parameterType="com.cqupt.rms.model.basic.Goodstype">
+		update goodsType set typeName = #{typename} where typeId = #{typeid}
+	</update>
+</mapper>

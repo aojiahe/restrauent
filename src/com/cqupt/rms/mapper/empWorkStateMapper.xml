@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cqupt.rms.mapper.EmpWorkStateMapper">
+	<resultMap type="com.cqupt.rms.model.custom.EmployeeCustom" id="queryEmpWorkStateResMap">
+		
+	</resultMap>
+	<!-- 根据部门名称/员工名称/员工编号查询员工工作情况,时间作为可选筛选条件 -->
+	<select id="queryEmpWorkState" parameterType="com.cqupt.rms.model.custom.EmpworkstateCustom"
+		resultMap="queryEmpWorkStateResMap">
+		select empWorkState.*,employee.empName,department.deptName from empWorkState,department,employee
+ 			where empWorkState.deptId = department.deptId and empWorkState.empId = employee.empId	
+				<choose>
+					<when test="empid != null and empid != ''">
+						and empworkstate.empId like '%${empid}%'
+					</when>
+					<when test="empName != null and empName != ''">
+						and employee.empName like '%${empName}%'
+					</when>
+					<when test="deptName != null and deptName != ''">
+						and department.deptName like '%${deptName}%'
+					</when>
+				</choose>
+		    	<if test="startTime != null and startTime != ''">
+		    		<if test="endTime != null and endTime != ''">
+		    			and workTime between #{startTime} and #{endTime}
+		    		</if>
+		    		and workTime > #{startTime}
+		    	</if>
+		    	<if test="endTime != null and endTime != ''">
+		    			and workTime &lt; #{endTime}
+		    	</if>
+	</select>
+	
+	<!-- 添加员工工作情况 -->
+	<insert id="insertEmpWorkStateById">
+		
+	</insert>
+</mapper>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>修改商品类型信息</title>
+
+<script type="text/javascript" src="../resources/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="../resources/jquery.form.js"></script>
+<script type="text/javascript">
+	//获取要修改的商品类型信息
+	$(document).ready(function(){
+		$.ajax({
+			url:"../menu/updateGoodsType.action,
+			type:"POST",
+			dataType:'json',
+			contentType:'application/json;charset=utf-8',
+			success:function(data){
+				if(data.mStatus == 0)
+					alert("success")
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				alert(textStatus);
+				alert(errorThrown);
+			}
+		})
+	})
+	function updateGoodsTypeSub(){
+		 var $form = $("#updateGoodsTypeForm")
+         $form.on("submit",function() {
+             $(this).ajaxSubmit(
+                     {
+                         dataType: "json",           //html(默认), xml, script, json...接受服务端返回的类型
+                         resetForm: true,          //成功提交后，重置所有表单元素的值
+                         
+                         success: function(data,status,xhr,$form){
+                            
+                            alert("success")
+                         },
+                         error: function(xhr, status, error, $form){
+                             alert(error)
+                         }
+                     }
+             );
+             return false; //阻止表单默认提交
+         });
+		}
+</script>
+</head>
+<body>
+	<h1>修改商品类型信息</h1>
+	<form action="../menu/updateGoodsTypeSub.action" method="post" id="updateGoodsTypeForm">
+		<input type="text" name="newTypeName"><br>
+		<input type="button" value="提交" onclick="updateGoodsTypeSub()">
+			&nbsp;&nbsp;<input type="reset" value="重置">
+		<br>
+		<div id="output"></div>
+	</form>
+</body>
+</html>

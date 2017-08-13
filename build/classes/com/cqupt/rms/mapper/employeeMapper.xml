@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.cqupt.rms.mapper.EmployeeMapper">
+	<!-- 查询所有员工信息 -->
+	<select id="queryEmployee" resultType="com.cqupt.rms.model.custom.EmployeeCustom">
+		select employee.*,department.deptName from employee,department where employee.deptId = department.deptId
+	</select>
+	
+	
+	<!-- 根据员工编号/员工姓名/部门名称 查询员工信息,如果学历编号不为空，则将其作为一个筛选条件 -->
+	<select id="searchEmployee" parameterType="com.cqupt.rms.model.custom.EmployeeCustom"
+		resultType="com.cqupt.rms.model.custom.EmployeeCustom">
+		select employee.*,department.deptName from employee,department where employee.deptId = department.deptId
+		<choose>
+			<!-- 根据员工编号 -->
+			<when test="empid != null">
+				and employee.empId like '%${empid}%'
+			</when>
+			
+			<!-- 根据员工姓名 -->
+			<when test="empname != null">
+				and employee.empName like '%${empname}%'
+			</when>
+			
+			<!-- 根据部门名称 -->
+			<when test="deptName != null">
+				and department.deptName like '%${deptName}%'
+			</when>
+		</choose>
+		<if test="education != null">
+			and employee.education = #{education}
+		</if>
+	</select>
+	
+	<!-- 按入职年份及部门编号查询该部门在当年入职的最新的员工编号 -->
+	<select id="getLastEmpId" parameterType="String" resultType="String">
+		select empId from employee where empId like '${value}%'
+				order by empId desc limit 0,1
+	</select>
+	
+	<!-- 添加员工信息 -->
+	<insert id="insertEmployee" parameterType="com.cqupt.rms.model.basic.Employee">
+		insert into employee(empId,id,roleId,empName,deptId,sex,address,education,telNumber)
+			values(#{empid},#{id},#{roleid},#{empname},#{deptid},#{sex},#{address},#{education},#{telnumber})
+	</insert>
+	
+	<!-- 根据员工编号修改员工信息 -->
+	<update id="updateEmployeeById" parameterType="com.cqupt.rms.model.basic.Employee">
+		update employee set id = #{id},roleId = #{roleid},empName = #{empname},deptId = #{deptid},
+			sex = #{sex},address = #{address},education = #{education},telNumber = #{telnumber}
+				where empId = #{empid}
+	</update>
+</mapper>

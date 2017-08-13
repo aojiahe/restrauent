@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>后台管理首页左侧</title>
+
+<script type="text/javascript" src="../resources/jquery-3.1.1.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		//获取员工基本信息
+		$.ajax({
+			url:"../userLogin/getEmpInfo.action",
+			type:"POST",
+			contentType:"application/json;charset=utf-8",
+			success:function(data){
+				if(data.mStatus == 0)
+					alert(data.mContent.empname)
+				else
+					alert(data.mError)
+			},
+			error : function(XMLHttpRequest, textStatus, errorThrown) {
+				alert(textStatus);
+				alert(errorThrown);
+			}
+		})
+	})
+</script>
+</head>
+<body>
+<div>
+	<div>消费管理</div>
+	<ul>
+		<li><a href="../orders/reqOrdersManage.action" target="content">消费信息管理</a></li>
+	</ul>
+</div>
+
+<div>
+	<div>菜谱管理</div>
+	<ul>
+		<li><a href="../menu/reqMenuTypesManage.action" target="content">菜谱类别管理</a></li>
+		<li><a href="../menu/reqSpecialMenuManage.action" target="content">特色菜维护</a></li>
+		<li><a href="../menu/#.action" target="content" target="content">菜品明细维护</a></li>
+	</ul>
+</div>
+
+<div>
+	<div>酒水饮料管理</div>
+	<ul>
+		<li><a href="/RMS/menu/#.action" target="content">酒水饮料维护</a></li>
+	</ul>
+</div>
+
+<div>
+	<div>套餐管理</div>
+	<ul>
+		<li><a href="../packages/reqPackagesManage.action" target="content">套餐维护</a></li>
+	</ul>
+</div>
+
+<div>
+	<div>员工管理</div>
+	<ul>
+		<li><a href="../employee/reqEmployeeManage.action" target="content">员工信息管理</a></li>
+		<li><a href="../empWorkState/reqEmpworkstateManage.action" target="content">员工工作情况管理</a></li>
+		<li><a href="/RMS/employee/#.action" target="content">部门信息管理</a></li>
+	</ul>
+</div>
+
+<div>
+	<div>仓库信息管理</div>
+	<ul>
+		<li><a href="/RMS/goods/#.action" target="content">仓库动态</a></li>
+		<li><a href="/RMS/goods/#.action" target="content">出/入库管理</a></li>
+		<li><a href="/RMS/goods/#.action" target="content">进货信息管理</a></li>
+	</ul>
+</div>
+
+<div>
+	<div>个人中心</div>
+	<ul>
+		<li><a href="/RMS/user/#.action" target="content">操作员管理</a></li>
+		<li><a href="/RMS/user/#.action" target="content">编辑站点</a></li>
+		<li><a href="/RMS/user/#.action" target="content">个人信息管理</a></li>
+		<li><a href="/RMS/user/#.action" target="content">角色权限信息管理</a></li>
+		<li><a href="/RMS/user/#.action" target="content">退出系统</a></li>
+	</ul>
+</div>
+
+</body>
+</html>

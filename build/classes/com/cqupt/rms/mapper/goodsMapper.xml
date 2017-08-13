@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cqupt.rms.mapper.GoodsMapper">
+
+	<resultMap type="com.cqupt.rms.model.custom.GoodsQueryVo" id="queryGoodsResultMap">
+		<!-- 商品信息 -->
+		<association property="goods" javaType="com.cqupt.rms.model.basic.Goods">
+			<id column="goodsId" property="goodsid"/>
+			<result column="goodsName" property="goodsname"/>
+			<result column="goodsPrice" property="goodsprice"/>
+			<result column="goodsDiscount" property="goodsdiscount"/>
+		</association>
+		
+		<!-- 商品类型信息 -->
+		<association property="goodstype" javaType="com.cqupt.rms.model.basic.Goodstype">
+			<result column="typeName" property="typename"/>
+		</association>
+	</resultMap>
+	<!-- 查询所有的商品信息 -->
+	<select id="queryGoods" parameterType="com.cqupt.rms.model.custom.GoodsQueryVo" 
+		resultMap="queryGoodsResultMap">
+		select goods.goodsId,goods.goodsName,goodsType.typeName,goods.goodsPrice,goods.goodsDiscount 
+			from goods,goodsType
+				<where>
+					goods.typeId = goodsType.typeId 
+					<if test="goods != null">
+						 and goods.isSpecial = #{goods.isspecial}
+					</if>
+					<if test="goodstype != null">
+						 and goodsType.type = #{goodstype.type}
+					</if>
+				</where>
+	</select>
+	
+	<!-- 使用关键字通过对商品的名称模糊查询某一类商品信息 -->
+	<select id="searchGoodsByName" parameterType="com.cqupt.rms.model.custom.GoodsQueryVo"
+		resultMap="queryGoodsResultMap">
+			select goods.goodsId,goods.goodsName,goodsType.typeName,goods.goodsPrice,goods.goodsDiscount 
+				from goods,goodsType
+					where goods.goodsName like '%${goods.goodsname}%' and goods.typeId = goodsType.typeId
+						and goodsType.type = #{goodstype.type}
+						<if test="goodstype.typeid != null">
+							and goodsType.typeId = #{goodstype.typeid}
+						</if>
+						<if test="goods.isspecial != null">
+							 and goods.isSpecial = #{goods.goodsid}
+						</if>
+	</select>
+	
+	<!-- 使用关键字通过对商品的编号模糊查询某一类商品信息 -->
+	<select id="searchGoodsById" parameterType="com.cqupt.rms.model.custom.GoodsQueryVo"
+		resultMap="queryGoodsResultMap">
+			select goods.goodsId,goods.goodsName,goodsType.typeName,goods.goodsPrice,goods.goodsDiscount 
+				from goods,goodsType
+					where goods.goodsId like '%${goods.goodsid}%' and goods.typeId = goodsType.typeId
+						and goodsType.type = #{goodstype.type}
+						<if test="goodstype.typeid != null">
+							and goodsType.typeId = #{goodstype.typeid}
+						</if>
+						<if test="goods.isspecial != null">
+							 and goods.isSpecial = #{goods.goodsid}
+						</if>
+	</select>
+	
+	<!-- 获取最新的菜品编号 -->
+	<select id="getLastFoodsId" resultType="String">
+		select goodsId from goods,goodsType 
+			where goods.typeId = goodsType.typeId and goodsType.type = '1' 
+				order by goods.goodsId desc limit 0,1
+	</select>
+	
+	<!-- 通过商品编号获取商品信息 -->
+	<select id="getGoodsById" parameterType="String" resultType="com.cqupt.rms.model.basic.Goods">
+		select * from goods where goodsId = #{goodsId}
+	</select>
+</mapper>

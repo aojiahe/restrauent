@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>员工工作情况管理</title>
+
+<script type="text/javascript" src="../resources/jquery-3.1.1.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	//获取员工工作情况信息
+	$.ajax({
+		url:"../employee/empworkstateManage.action,
+		type:"POST",
+		dataType:'json',
+		contentType:'application/json;charset=utf-8',
+		success:function(data){
+			if(data.mStatus == 0)
+				alert("success")
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(textStatus);
+			alert(errorThrown);
+		}
+	})
+})
+
+//查询员工工作情况
+function queryEmpworkstate(){
+	var startTime = $("#startTime").val();
+	var endTime = $("#endTime").val();
+	var queryMethod = $("#queryMethod").val();
+	var keyWords = $("#keyWords").val();
+
+	alert(startTime + " : " + endTime + " : " + queryMethod + " : " + keyWords)
+
+	var dataJson = {
+			"startTime":startTime,
+			"endTime":endTime,
+			"queryMethod":queryMethod,
+			"keyWords":keyWords
+		}
+	$.ajax({
+		url:"../employee/queryEmpworkstate.action",
+		type:"POST",
+		data:dataJson,
+		dataType:'json',
+		contentType:'application/json;charset=utf-8',
+		success:function(data){
+			if(data.mStatus == 0)
+				alert("success")
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(textStatus);
+			alert(errorThrown);
+		}
+	})
+}
+</script>
+</head>
+<body>
+	<h1>员工工作情况管理</h1>
+	Time:<input type="text" id="startTime">to<input type="text" id="endTime">&nbsp;&nbsp;
+	queryMethod:<select id="queryMethod">
+					<option value="0">--choose--</option>
+					<option value="1">name</option>
+					<option value="2">id</option>
+					<option value="3">dept</option>
+				</select>&nbsp;&nbsp;
+	
+	<input type="text" id="keyWords">&nbsp;&nbsp;
+	
+	<input type="button" value="查询" onclick="queryEmpworkstate()">&nbsp;
+	
+	<a href="../empWorkState/reqAddWorkstate.action"><input type="button" value="添加"></a>&nbsp;
+	
+	<input type="button" value="删除" onclick="deleteWorkstate()"><br>
+</body>
+</html>

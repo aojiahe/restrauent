@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>员工信息管理</title>
+
+<script type="text/javascript" src="../resources/jquery-3.1.1.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	//获取员工信息
+	$.ajax({
+		url:"../employee/employeeManage.action,
+		type:"POST",
+		dataType:'json',
+		contentType:'application/json;charset=utf-8',
+		success:function(data){
+			if(data.mStatus == 0)
+				alert("success")
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(textStatus);
+			alert(errorThrown);
+		}
+	})
+})
+
+//查询员工信息
+function queryEmployee(){
+	var keyWords = $("#keyWords").val();
+	var queryMethod = $("#queryMethod").val();
+	var education = $("#education").val();
+	
+	alert("keyWords:" + keyWords + " queryMethod:" + queryMethod + " education:" + education)
+	
+	var dataJson = {
+			"keyWords":keyWords,
+			"queryMethod":queryMethod,
+			"education":education
+		}
+	$.ajax({
+		url:"../employee/queryEmployee.action",
+		type:"POST",
+		data:dataJson,
+		dataType:'json',
+		contentType:'application/json;charset=utf-8',
+		success:function(data){
+			if(data.mStatus == 0)
+				alert("success")
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(textStatus);
+			alert(errorThrown);
+		}
+	})
+}
+
+</script>
+</head>
+<body>
+	<h1>员工信息管理</h1>
+	查询方式：<select id="queryMethod">
+				<option value="0">--请选择--</option>
+				<option value="1">员工姓名</option>
+				<option value="2">员工编号</option>
+				<option value="3">部门</option>
+			</select>&nbsp;&nbsp;
+			<select id="education">
+				<option value="0">--请选择--</option>
+			</select>
+			&nbsp;&nbsp;
+	<input type="text" id="keyWords">&nbsp;&nbsp;
+	
+	<input type="button" value="查询" onclick="queryEmployee()">&nbsp;
+	
+	<a href="../employee/reqAddEmployee.action"><input type="button" value="添加"></a>&nbsp;
+	
+	<input type="button" value="删除" onclick="deleteEmployee()"><br>
+	
+	<a href="../employee/reqUpdateEmployee.action?empid=201601001">修改</a>&nbsp;&nbsp;
+	<a href="#">删除</a>
+</body>
+</html>

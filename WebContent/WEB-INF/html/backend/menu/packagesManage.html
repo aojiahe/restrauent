@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>套餐信息管理</title>
+
+<script type="text/javascript" src="../resources/jquery-3.1.1.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	//获取套餐信息
+	$.ajax({
+		url:"../packages/packagesManage.action,
+		type:"POST",
+		dataType:'json',
+		contentType:'application/json;charset=utf-8',
+		success:function(data){
+			if(data.mStatus == 0)
+				alert("success")
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(textStatus);
+			alert(errorThrown);
+		}
+	})
+})
+
+//查询套餐信息
+function queryPackages(){
+	var keyWords = $("#keyWords").val();
+	alert("keyWords:" + keyWords)
+	var dataJson = {
+			"keyWords":keyWords
+		}
+
+	$.ajax({
+		url:"../packages/queryPackages.action",
+		type:"POST",
+		data:dataJson,
+		dataType:'json',
+		contentType:"application/json;charset=utf-8",
+		success:function(data){
+			if(data.mStatus == 0)
+				alert("success")
+			else
+				alert("error")
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(textStatus);
+			alert(errorThrown);
+		}
+	})
+}
+</script>
+</head>
+<body>
+	<h1>套餐信息管理</h1>
+	<input type="text" id="keyWords">&nbsp;&nbsp;
+	
+	<input type="button" value="查询" onclick="queryMenuType()">&nbsp;
+	
+	<a href="../packages/reqAddPackages.action"><input type="button" value="添加"></a>&nbsp;
+	
+	<input type="button" value="删除" onclick="deletePackages()">
+	<br>
+	<a href="../packages/reqUpdatePackages.action?packagesId=1">修改</a>&nbsp;&nbsp;
+	<a href="../packages/reqPackagesDetail.action?packagesId=1">详情</a>
+</body>
+</html>

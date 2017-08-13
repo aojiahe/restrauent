@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<title>菜品类别管理</title>
+<script type="text/javascript" src="../resources/jquery-3.1.1.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	//获取菜品类别信息
+	var mtype = {'type':1};
+	$.ajax({
+		url:"../menu/goodsTypesManage.action,
+		data:mtype,
+		type:"POST",
+		dataType:'json',
+		contentType:'application/json;charset=utf-8',
+		success:function(data){
+			if(data.mStatus == 0)
+				alert("success")
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(textStatus);
+			alert(errorThrown);
+		}
+	})
+})
+
+//查询菜品类别
+function queryMenuType(){
+	var keyWords = $("#keyWords").val();
+	alert("keyWords:" + keyWords)
+	var dataJson = {
+			"keyWords":keyWords,
+			"type":1
+		}
+	$.ajax({
+		url:"../menu/queryGoodsType.action",
+		type:"POST",
+		data:dataJson,
+		dataType:'json',
+		contentType:'application/json;charset=utf-8',
+		success:function(data){
+			if(data.mStatus == 0)
+				alert("success")
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(textStatus);
+			alert(errorThrown);
+		}
+	})
+}
+
+//删除
+function deleteMenuType(){
+	
+}
+</script>
+</head>
+<body>
+	<h1>菜品类别管理</h1>
+	<input type="text" id="keyWords">&nbsp;&nbsp;
+	<input type="button" value="查询" onclick="queryMenuType()">&nbsp;
+	<a href="../menu/reqAddGoodsType.action?type=1"><input type="button" value="添加"></a>&nbsp;
+	<input type="button" value="删除" onclick="deleteMenuType()"><br>
+	<table border="1">
+		<tr>
+			<th><input type="checkbox" onclick="selectAll()"></th>
+			<th>编号</th>
+			<th>类别</th>
+			<th>操作</th>
+		</tr>
+		<tr>
+			<td><a href="../menu/reqUpdateGoodsType.action?typeId=1" target="content">修改</a></td>
+			<td><a href="#" target="content">删除</a></td>
+		</tr>
+	</table>
+</body>
+</html>

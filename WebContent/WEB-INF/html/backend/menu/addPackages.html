@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>添加套餐信息</title>
+<script type="text/javascript" src="../resources/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="../resources/jquery.form.js"></script>
+<script type="text/javascript">
+//获取菜品类型信息
+$(document).ready(function(){
+	$.ajax({
+		url:"../menu/goodsTypesManage.action,
+		type:"POST",
+		dataType:'json',
+		data:{'type':1},
+		contentType:'application/json;charset=utf-8',
+		success:function(data){
+			if(data.mStatus == 0)
+				alert("success")
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(textStatus);
+			alert(errorThrown);
+		}
+	})
+})
+
+//添加套餐信息
+function addPackages(){
+	var selectMenus = $("select[name='selectMenus']")
+	for(var i in selectMenus)
+		alert(selectMenus[i].val())
+}
+	var $form = $("#addPackagesForm")
+	$form.on("submit",function() {
+    $(this).ajaxSubmit(
+            {
+                dataType: "json",           //html(默认), xml, script, json...接受服务端返回的类型
+                resetForm: true,          //成功提交后，重置所有表单元素的值
+                success: function(data,status,xhr,$form){
+                  if(data.mStatus == 0)
+                      alert(data.mContent)
+                   else
+                	   alert(data.mError) 
+                },
+                error: function(xhr, status, error, $form){
+                    alert(error)
+            }
+    );
+    return false;
+});
+}
+</script>
+</head>
+<body>
+	<h1>添加套餐信息</h1>
+	<form action="" id="addPackagesForm">
+	
+	套餐名：<input type="text" name="packagename"><br>
+	价格：<input type="text" name="packageprice"><br>
+	折扣：<input type="text" name="packagediscount"><br>
+	建议使用人数：<input type="text" name="packageunit"><br>
+	
+	菜品类别：
+	<select id="menuTypes">
+		<option value="0">所有菜品</option>
+		<option value="1">詹姆斯</option>
+		<option value="2">齐达内</option>
+		<option value="3">乔丹</option>
+	</select><br>
+	套餐组合:
+	<select id="showMenus" multiple="multiple" style="height:150px; width:100px;" >
+		<option value="1">test11</option>
+		<option value="2">test22</option>
+		<option value="3">test33</option>
+	</select>
+	
+	<input type="button" value=">" onclick="left()"/>
+	<input type="button" value=">>" onclick="dbleft()"/>
+	<input type="button" value="清空" onclick="dbright()"/>
+	<input type="button" value="删除" onclick="right()"/>
+	
+	<select name="selectMenus" multiple="multiple" style="height:150px; width:100px;">
+		<option value="1">test1</option>
+		<option value="2">test2</option>
+		<option value="3">test3</option>
+	</select>
+	<input type="button" value="添加" onclick="addPackages()"> 
+	</form>
+</body>
+</html>

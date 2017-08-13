@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cqupt.rms.mapper.OrdersMapper">
+	<!-- 消费信息结果集映射 -->
+	<resultMap type="com.cqupt.rms.model.custom.OrdersCustom" id="queryOrdersResultMap">
+		<!-- 订单信息 -->
+			<id column="orderId" property="orderid"/>
+			<result column="operateEmpId" property="operateempid"/>
+			<result column="orderTime" property="ordertime"/>
+			<result column="payTotalPrice" property="paytotalprice"/>
+			<result column="repastTime" property="repasttime"/>
+			<result column="orderNumber" property="ordernumber"/>
+			<result column="totalPrice" property="totalprice"/>
+			<result column="payment" property="payment"/>
+			<result column="charge" property="charge"/>
+			
+			<!-- 顾客信息 -->
+			<association property="customer" javaType="com.cqupt.rms.model.basic.Customer">
+				<id column="cusId" property="cusid"/>
+				<result column="cusName" property="cusname"/>
+			</association>
+		
+			<!-- 餐厅信息 -->
+			<association property="restaurant" javaType="com.cqupt.rms.model.basic.Restaurant">
+				<result column="restaurantName" property="restaurantname"/>
+			</association>
+		
+	</resultMap>
+	
+	<!-- 查询所有(有记录的顾客的)消费信息 -->
+	<select id="queryOrders" resultMap="queryOrdersResultMap">
+		select orders.orderId,orders.operateEmpId,orders.orderTime,customer.cusName,customer.cusId,
+			restaurant.restaurantName,orders.payTotalPrice
+				from orders,customer,restaurant
+					where orders.cusId = customer.cusId and restaurant.restaurantId = orders.restaurantId
+	</select>
+	
+	<!-- 根据员工编号查询消费信息 -->
+	<select id="queryOrdersByEmpId" parameterType="String" resultMap="queryOrdersResultMap">
+		select orders.orderId,orders.operateEmpId,orders.orderTime,customer.cusName,
+			customer.cusId,restaurant.restaurantName,orders.payTotalPrice
+				from orders,customer,restaurant
+					where orders.cusId = customer.cusId 
+						and restaurant.restaurantId = orders.restaurantId 
+						and orders.operateEmpId like '%${value}%'
+	</select>
+	
+	<!-- 根据餐厅名称查询消费信息 -->
+	<select id="queryOrdersByRestrName" parameterType="String" resultMap="queryOrdersResultMap">
+		select orders.orderId,orders.operateEmpId,orders.orderTime,customer.cusName,
+			customer.cusId,restaurant.restaurantName,orders.payTotalPrice
+				from orders,customer,restaurant
+					where orders.cusId = customer.cusId 
+						and restaurant.restaurantId = orders.restaurantId 
+						and restaurant.restaurantName like '%${value}%'
+	</select>
+	
+	<!-- 根据订餐时间查询消费信息 -->
+	<select id="queryOrdersByOrderTime" parameterType="String" resultMap="queryOrdersResultMap">
+		select orders.orderId,orders.operateEmpId,orders.orderTime,customer.cusName,
+			customer.cusId,restaurant.restaurantName,orders.payTotalPrice
+				from orders,customer,restaurant
+					where orders.cusId = customer.cusId 
+						and restaurant.restaurantId = orders.restaurantId 
+						and orders.orderTime like '%${value}%'
+	</select>
+	
+	
+	<!-- 根据客户姓名查询消费信息 -->
+	<select id="queryOrdersByCusName" parameterType="String" resultMap="queryOrdersResultMap">
+		select orders.orderId,orders.operateEmpId,orders.orderTime,customer.cusName,
+			customer.cusId,restaurant.restaurantName,orders.payTotalPrice
+				from orders,customer,restaurant
+					where orders.cusId = customer.cusId 
+						and restaurant.restaurantId = orders.restaurantId 
+						and customer.cusName like '%${value}%'
+	</select>
+	
+	
+	<!-- 根据订单编号查询订单信息 -->
+	<select id="queryOrdersByOrderId">
+		select orders.orderId,orders.operateEmpId,orders.orderTime,customer.cusName,
+			customer.cusId,restaurant.restaurantName,orders.payTotalPrice
+				from orders,customer,restaurant
+					where orders.cusId = customer.cusId 
+						and restaurant.restaurantId = orders.restaurantId 
+						and orders.orderId like '%${value}%'
+	</select>
+	
+	<sql id="deleteByIds_sql">
+		<if test="ids != null">
+			<foreach collection="ids" item="id" open="and orderId in(" close=")" separator=",">
+				#{id}
+			</foreach>
+		</if>
+	</sql>
+	<!-- 根据订单编号删除消费记录 -->
+	<delete id="deleteOrdersByIds" parameterType="com.cqupt.rms.model.custom.OrdersCustom">
+		delete from orders
+		<where>
+			<include refid="deleteByIds_sql"/>
+		</where>
+	</delete>
+	
+	
+	<resultMap type="com.cqupt.rms.model.custom.OrdersCustom" id="queryOrderDetailsResultMap"
+		 extends="queryOrdersResultMap">
+		<!-- 就餐房间 -->
+		<collection property="orderdesksdetails" ofType="com.cqupt.rms.model.custom.OrderdeskdetailsCustom">
+			<result column="roomId" property="roomid"/>
+			<result column="deskIds" property="deskids"/>
+			
+			<!-- 餐点信息 -->
+			<collection property="ordergoodsdetails" ofType="com.cqupt.rms.model.custom.OrdergoodsdetailsCustom">
+				<id column="goodsId" property="goodsid"/>
+				<result column="goodsName" property="goodsName"/>
+				<result column="goodsUnit" property="goodsUnit"/>
+				<result column="goodsNum" property="goodsnum"/>
+				<result column="goodsPrice" property="goodsprice"/>
+				<result column="goodsDiscount" property="goodsdiscount"/>
+				<result column="typeName" property="typeName"/>
+			</collection>
+		</collection>
+		
+	</resultMap>
+	<!-- 根据订单编号查询消费详情 -->
+	<select id="selectOrderDetailsById" parameterType="String" resultMap="queryOrderDetailsResultMap">
+		select orders.*,(orders.payTotalPrice - orders.totalPrice) charge,customer.cusName,orderDesksDetails.roomId,
+			orderDesksDetails.deskIds,goodsType.typeName,orderGoodsDetails.goodsId,
+			orderGoodsDetails.goodsNum,orderGoodsDetails.goodsPrice,orderGoodsDetails.goodsDiscount,
+			goods.goodsName,goods.goodsUnit,restaurant.restaurantName
+				from orders,customer,orderDesksDetails,orderGoodsDetails,goodsType,goods,restaurant
+					where orders.orderId = #{orderId} and orders.orderId = orderDesksDetails.orderId 
+						and orders.orderId = orderGoodsDetails.orderId
+						and orders.cusId = customer.cusId and orderGoodsDetails.goodsId = goods.goodsId 
+						and goods.typeId = goodsType.typeId
+						and restaurant.restaurantId = orders.restaurantId
+	</select>
+</mapper>

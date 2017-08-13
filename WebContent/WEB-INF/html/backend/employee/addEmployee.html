@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>添加员工信息</title>
+<script type="text/javascript" src="../resources/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="../resources/jquery.form.js"></script>
+<script type="text/javascript">
+//获取部门信息
+$(document).ready(function(){
+	$.ajax({
+		url:"../employee/deptManage.action,
+		type:"POST",
+		dataType:'json',
+		contentType:'application/json;charset=utf-8',
+		success:function(data){
+			if(data.mStatus == 0)
+				alert("success")
+		},
+		error : function(XMLHttpRequest, textStatus, errorThrown) {
+			alert(textStatus);
+			alert(errorThrown);
+		}
+	})
+})
+
+function addEmployeeSub(){
+	 	var $form = $("#addEmployeeForm")
+    	$form.on("submit",function() {
+        $(this).ajaxSubmit(
+                {
+                    dataType: "json",           //html(默认), xml, script, json...接受服务端返回的类型
+                    resetForm: true,          //成功提交后，重置所有表单元素的值
+                    success: function(data,status,xhr,$form){
+                      if(data.mStatus == 0)
+                          alert(data.mContent)
+                       else
+                    	   alert(data.mError) 
+                    },
+                    error: function(xhr, status, error, $form){
+                        alert(error)
+                }
+        );
+        return false; //阻止表单默认提交
+    });
+	}
+</script>
+</head>
+<body>
+ <h1>添加员工信息</h1>
+ <form action="../employee/addEmployee.action" method="post" id="addEmployeeForm">
+ 
+ 	姓名：<input type="text" name="empname"><br>
+ 	
+ 	身份证号：<input type="text" name="id"><br>
+ 	性别：<input type="checkbox" name="sex" value="男" checked="checked">&nbsp;&nbsp;
+ 			<input type="checkbox" name="sex" value="女"><br>
+ 			
+ 	联系方式：<input type="text" name="telnumber"><br>
+ 	
+ 	家庭住址：<input type="text" name="address"><br>
+ 	所属部门：
+ 	<select name="typeid">
+			<option value="01">餐饮服务部</option>
+	</select><br>
+ 	学历：
+ 	<select name="education">
+			<option value="1">test</option>
+	</select><br>
+ 	<input type="button" onclick="addEmployeeSub()" value="添加"> 
+ </form>
+</body>
+</html>

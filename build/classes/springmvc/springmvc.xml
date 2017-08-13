@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<context:component-scan base-package="com.cqupt.rms.controller.*"></context:component-scan>
+	
+	<mvc:annotation-driven/>
+	
+	<!-- <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+		<list>
+		<bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"></bean>
+		</list>
+		</property>
+	</bean>
+	 -->
+	 
+	 <!-- 配置json转换器 -->
+	 <!-- <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <ref bean="mappingJackson2HttpMessageConverter" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="mappingJackson2HttpMessageConverter" 
+    	class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+
+        <property name="supportedMediaTypes">
+            <list>
+                <value>text/html;charset=UTF-8</value>
+                <value>text/json;charset=UTF-8</value>
+                <value>application/json;charset=UTF-8</value>
+            </list>
+        </property>
+
+    </bean> -->
+	
+	<!-- 处理静态资源 -->
+	<!-- <mvc:resources location="/resources/**" mapping="/resources"></mvc:resources> -->
+	
+	
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	    <!-- 配置html路径的前缀 -->
+		<property name="prefix" value="/WEB-INF/html/"></property>
+		<!-- 配置html路径的后缀 -->
+		<!-- <property name="suffix" value=".html"></property> -->
+	</bean>
+
+</beans>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>添加员工工作情况</title>
+<script type="text/javascript" src="../resources/jquery-3.1.1.js"></script>
+<script type="text/javascript" src="../resources/jquery.form.js"></script>
+<script type="text/javascript">
+function addWorkstateSub(){
+ 	var $form = $("#addWorkstateForm")
+	$form.on("submit",function() {
+    $(this).ajaxSubmit(
+            {
+                dataType: "json",           //html(默认), xml, script, json...接受服务端返回的类型
+                resetForm: true,          //成功提交后，重置所有表单元素的值
+                success: function(data,status,xhr,$form){
+                  if(data.mStatus == 0)
+                      alert(data.mContent)
+                   else
+                	   alert(data.mError) 
+                },
+                error: function(xhr, status, error, $form){
+                    alert(error)
+            }
+    );
+    return false; //阻止表单默认提交
+});
+}
+</script>
+</head>
+<body>
+	<h1>添加员工工信息</h1>
+	<form action="../employee/addWorkstate.action" method="post" id="addWorkstateForm">
+ 		编号：<input type="text" name="empid"><br>
+ 		
+ 		迟到：<input type="text" name="late"> <br>
+ 		
+ 		旷到：<input type="text" name="absence"><br>
+ 		
+ 		请假：<input type="text" name="offwork"><br>
+ 		
+ 		其它：<textarea rows="30" cols="50" name="others"></textarea><br>
+ 		
+ 		备注：<textarea rows="30" cols="50" name="remark"></textarea><br>
+ 	<input type="button" onclick="addWorkstateSub()" value="添加"> 
+ </form>
+</body>
+</html>
